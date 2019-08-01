@@ -17,7 +17,7 @@ interface ChannelPack {
   ruleSet: string,
 }
 
-const rotateKey = (key: string) => `${key}`; // TODO: hash
+const rotateKey = (key: string) => `${key}a`; // TODO: hash
 
 const pack = (data: ChannelData): ChannelPack => ({
   keys: data.keys,
