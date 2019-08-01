@@ -1,21 +1,11 @@
-import openpgp, { message as PgpMessage, message } from 'openpgp';
+import openpgp, { message as PgpMessage } from 'openpgp';
 import Identity, { Message } from 'Identity';
 import Transporter from 'Transporter';
 import { randomString } from 'helpers/random';
 import EventEmitter from 'eventemitter3';
 import RuleSet from 'RuleSet';
 import rules from 'RuleSet/sets';
-
-export interface ChannelData<RuleType = any> {
-  self: Identity;
-  members: Identity[];
-  keys: {
-    idKey: string,
-    channelKey: string,
-  },
-  rules: RuleType,
-  ruleSet: string,
-}
+import ChannelData from './ChannelData';
 
 interface ChannelPack {
   keys: {
@@ -27,16 +17,14 @@ interface ChannelPack {
   ruleSet: string,
 }
 
-const rotateKey = (key: string) => key + 'a'; //TODO: hash
+const rotateKey = (key: string) => `${key}a`; // TODO: hash
 
-const pack = (data: ChannelData): ChannelPack => {
-  return {
-    keys: data.keys,
-    members: data.members.map(m => m.publicKey.armor()),
-    rules: data.rules,
-    ruleSet: data.ruleSet,
-  };
-}
+const pack = (data: ChannelData): ChannelPack => ({
+  keys: data.keys,
+  members: data.members.map(m => m.publicKey.armor()),
+  rules: data.rules,
+  ruleSet: data.ruleSet,
+});
 
 class Channel extends EventEmitter {
   private _data: ChannelData;
@@ -66,7 +54,7 @@ class Channel extends EventEmitter {
       const options = {
         message: await PgpMessage.readArmored(data),
         passwords: [channelKey],
-      }
+      };
       const outer = await openpgp.decrypt(options);
       const message = await self.decrypt(outer.data as string, members);
       output = message;
@@ -96,19 +84,19 @@ class Channel extends EventEmitter {
     };
     const outer = await openpgp.encrypt(options);
     await this._transporter.add(idKey, outer.data);
-    return await this.update();
+    return this.update();
   }
 
   pack(receiver: Identity = this._data.self) {
     const packed = pack(this._data);
-    return this._data.self.encrypt(packed, [receiver])
+    return this._data.self.encrypt(packed, [receiver]);
   }
 
   static async create(self: Identity, members: string[] = []) {
     const channel = new Channel({
       keys: {
-        idKey: randomString(32),
-        channelKey: randomString(32),
+        idKey: randomString(),
+        channelKey: randomString(),
       },
       self,
       members: [
@@ -124,7 +112,12 @@ class Channel extends EventEmitter {
     return key;
   }
 
-  static async load(self: Identity, key: string, transporter: Transporter, sender: Identity = self) {
+  static async load(
+    self: Identity,
+    key: string,
+    transporter: Transporter,
+    sender: Identity = self,
+  ) {
     const channelDataRaw = await self.decrypt<ChannelPack>(key, [sender]);
     const channelData: ChannelData = {
       keys: channelDataRaw.data.keys,
@@ -132,7 +125,7 @@ class Channel extends EventEmitter {
       ruleSet: channelDataRaw.data.ruleSet,
       members: await Promise.all(channelDataRaw.data.members.map(member => Identity.open(member))),
       self,
-    }
+    };
     const channel = new Channel(channelData, transporter);
     return channel;
   }

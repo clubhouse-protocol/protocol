@@ -20,6 +20,7 @@ matrix:
     - "./cc-test-reporter before-build"
     script:
     - npm test
+    - npm build
     after_script:
     - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 env:
