@@ -1,5 +1,5 @@
 {
-  "name": "clubhouse",
+  "name": "@clubhouse-protocol/protocol",
   "version": "1.0.0-alpha.1",
   "description": "",
   "maintainers": [
@@ -18,7 +18,8 @@
     "build:js": "babel --extensions .ts --source-maps -d build/babel src/",
     "build:types": "tsc",
     "build:web": "webpack",
-    "build": "npm run build:types && npm run build:js && build:web"
+    "build": "npm run build:types && npm run build:js && npm run build:web",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "Morten Olsen",
