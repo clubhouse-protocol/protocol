@@ -1,4 +1,9 @@
-import openpgp, { key as PgpKey, message as PgpMessage, KeyOptions, EncryptOptions, DecryptOptions } from 'openpgp';
+import openpgp, {
+  key as PgpKey,
+  message as PgpMessage,
+  KeyOptions, EncryptOptions,
+  DecryptOptions,
+} from 'openpgp';
 
 interface CreateOptions {
   name: string;
@@ -40,7 +45,7 @@ class Identity {
   }
 
   unlock(passphrase: string) {
-    return this._key.decrypt(passphrase)
+    return this._key.decrypt(passphrase);
   }
 
   async encrypt(data: any, receivers: Identity[]) {
@@ -54,14 +59,14 @@ class Identity {
     return result.data as string;
   }
 
-  async decrypt<Type = any>(armored: string, senders: Identity[]): Promise<Message<Type>> {
+  async decrypt<Type = unknown>(armored: string, senders: Identity[]): Promise<Message<Type>> {
     const options: DecryptOptions = {
       message: await PgpMessage.readArmored(armored),
       publicKeys: senders.map(r => r.publicKey),
       privateKeys: [this._key],
     };
     const result = await openpgp.decrypt(options);
-    const [signature] = result.signatures
+    const [signature] = result.signatures;
     if (!signature.valid) {
       throw new Error('Sender not known');
     }
@@ -88,16 +93,16 @@ class Identity {
       }],
       passphrase,
       curve: 'ed25519',
-    }
-    const key = await openpgp.generateKey(options)
+    };
+    const key = await openpgp.generateKey(options);
     const privkey = key.privateKeyArmored;
 
     return privkey;
   }
 
   public static async open(armored: string, passphrase?: string) {
-    const { keys } = await PgpKey.readArmored(armored)
-    const [ key ] = keys;
+    const { keys } = await PgpKey.readArmored(armored);
+    const [key] = keys;
     const identity = new Identity(key);
     if (passphrase) {
       await identity.unlock(passphrase);

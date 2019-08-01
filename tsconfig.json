@@ -6,7 +6,6 @@
     "baseUrl": "./src",
     "rootDir": "./src",
     "esModuleInterop": true,
-    "emitDeclarationOnly": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "build/babel",
     "sourceMap": true,

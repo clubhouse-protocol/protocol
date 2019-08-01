@@ -1,1 +1,1 @@
-export const randomString = (length: number) => 'random'; //TODO: Add random string
+export const randomString = () => 'random'; // TODO: Add random string
