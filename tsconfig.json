@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "build/babel",
+    "sourceMap": true,
+    "declaration": true,
+  }
+}

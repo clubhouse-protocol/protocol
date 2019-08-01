@@ -1,0 +1,27 @@
+branches:
+  only:
+  - master
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+matrix:
+  include:
+  - language: node_js
+    sudo: false
+    node_js:
+    - '10'
+    install:
+    - travis_retry npm install
+    before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+      > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - "./cc-test-reporter before-build"
+    script:
+    - npm test
+    after_script:
+    - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+env:
+  global:
+    secure: VmiVllYxGwNBCeqK8fYFcTPfXkMZDmsXajhHaUnSJQD6qgDszI2u9QJPWQGc57g+621Dy+nUCNfy9TfK9pW9yhmcfqO2tiZ8SThqcotBY41EuzCbuTtMQQm0m7Tixf0zXFZpyYrITxU1CqLs4CKLi6Ksbp5gfOGAFbUWpLjkqINnC8ZDWiYdM39dudjD+1XYw753Sp6w8EOBjXjow5OheZaxvL1cgVxa5K0pWIlaZUFr93A4h0POJl/YtFU9KoOQRZE7dbeUAEes40ZUG4XtVgkbGjG810v67sjNS93Up63awsmSE3ldtT0cNZT7K4r63RGOJQN/RMtG33970Led7qUyg4rEZ1FLumNAvRTmMs1qnwuUgW9CxdboKbAw6pPlwLk7ESThYahhHhLevGG24mQrlzA/qdtp7ySB9wRJvtvOGvoYOu0MFRCcu0bHGFVKh37LKXoP9SXayEA1BKrsvYG10n8xihjcmzWtEGUu9MQ9nxjhroYL8l7vEcae8Wi25/cmANO+utydIXWEp/2KWzLvXo+zeyqT+TgoyMmRO08l0os7Wz8Ir+IcWEBKUR7r5215ysySfH8GkMU+LplCH86vns30chWgfMtZNcXquS6JRxi8U7du6ainy5SyWSdJPAxSzKz9463Dy03KH4+jSDsarfNC4n2Jjz1TVpHlnhM=
