@@ -1,6 +1,7 @@
 # Clubhouse Protocol
 
-[![Known Vulnerabilities](https://snyk.io//test/github/clubhouse-protocol/protocol/badge.svg?targetFile=package.json)](https://snyk.io//test/github/clubhouse-protocol/protocol?targetFile=package.json) [![Build Status](https://travis-ci.org/clubhouse-protocol/protocol.svg?branch=master)](https://travis-ci.org/clubhouse-protocol/protocol) [![Maintainability](https://api.codeclimate.com/v1/badges/8e855b081f4ae0f63e06/maintainability)](https://codeclimate.com/github/clubhouse-protocol/protocol/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8e855b081f4ae0f63e06/test_coverage)](https://codeclimate.com/github/clubhouse-protocol/protocol/test_coverage)
+[![Known Vulnerabilities](https://snyk.io//test/github/clubhouse-protocol/protocol/badge.svg?targetFile=package.json)](https://snyk.io//test/github/clubhouse-protocol/protocol?targetFile=package.json) [![Build Status](https://travis-ci.org/clubhouse-protocol/protocol.svg?branch=master)](https://travis-ci.org/clubhouse-protocol/protocol) [![Maintainability](https://api.codeclimate.com/v1/badges/8e855b081f4ae0f63e06/maintainability)](https://codeclimate.com/github/clubhouse-protocol/protocol/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8e855b081f4ae0f63e06/test_coverage)](https://codeclimate.com/github/clubhouse-protocol/protocol/test_coverage) [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=clubhouse-protocol_protocol&metric=alert_status)](https://sonarcloud.io/dashboard?id=clubhouse-protocol_protocol)
+
 
 **IMPORTANT**: This is a _crypto-protocol_ created by a **non-security-expert**, which means that you should NOT use this for anything that requires actual security.
 
