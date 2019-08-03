@@ -1,4 +1,4 @@
-import Identity from 'Identity';
+import Identity from '.';
 
 const getUser = async (name: string, passphrase?: string, unlock?: boolean) => {
   const privateKey = await Identity.create({

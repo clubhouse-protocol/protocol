@@ -1,6 +1,6 @@
-import Channel from 'Channel';
-import Identity from 'Identity';
-import { createUsers, TestTransporter } from 'helpers/test';
+import Channel from '../../Channel';
+import Identity from '../../Identity';
+import { createUsers, TestTransporter } from '../../helpers/test';
 
 describe('rules', () => {
   describe('dictatorship', () => {

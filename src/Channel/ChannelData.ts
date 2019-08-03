@@ -1,4 +1,4 @@
-import Identity from 'Identity';
+import Identity from '../Identity';
 
 interface ChannelData<RuleType = any> {
   self: Identity;

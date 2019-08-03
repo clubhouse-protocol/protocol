@@ -1,6 +1,6 @@
-import Identity from 'Identity';
-import Channel from 'Channel';
-import RuleSet from 'RuleSet';
+import Identity from './Identity';
+import Channel from './Channel';
+import RuleSet from './RuleSet';
 
 const loadIdentity = Identity.open;
 const createIdentity = Identity.create;

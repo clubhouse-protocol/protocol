@@ -1,5 +1,5 @@
-import Identity from 'Identity';
-import Transporter from 'Transporter';
+import Identity from '../Identity';
+import Transporter from '../Transporter';
 
 const createUser = async () => {
   const key = await Identity.create({

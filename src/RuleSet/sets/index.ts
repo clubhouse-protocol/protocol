@@ -1,4 +1,4 @@
-import RuleSet from 'RuleSet';
+import RuleSet from '..';
 import dictatorship from './dictatorship';
 
 const rules: {[name: string]: RuleSet} = {

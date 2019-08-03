@@ -1,10 +1,10 @@
-import openpgp, { message as PgpMessage } from 'openpgp';
-import Identity, { Message } from 'Identity';
-import Transporter from 'Transporter';
-import { randomString } from 'helpers/random';
 import EventEmitter from 'eventemitter3';
-import RuleSet from 'RuleSet';
-import rules from 'RuleSet/sets';
+import openpgp, { message as PgpMessage } from 'openpgp';
+import Identity, { Message } from '../Identity';
+import Transporter from '../Transporter';
+import { randomString } from '../helpers/random';
+import RuleSet from '../RuleSet';
+import rules from '../RuleSet/sets';
 import ChannelData from './ChannelData';
 
 interface ChannelPack {

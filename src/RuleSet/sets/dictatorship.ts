@@ -1,5 +1,5 @@
-import RuleSet from 'RuleSet';
-import Identity from 'Identity';
+import RuleSet from '..';
+import Identity from '../../Identity';
 
 interface RuleType {
   dictator: string;
