@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000px" height="1000px" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon">
+            <g>
+                <circle id="Oval" fill="#1E1E1E" cx="500" cy="500" r="500"></circle>
+                <path d="M123,510 C182.248826,284 307.511921,171 498.789287,171 C690.066653,171 816.803557,284 879,510" id="Path" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round"></path>
+                <polyline id="Path-2" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" points="223 440 223 779 779 779 779 440"></polyline>
+                <path d="M500.110123,696 C520.933433,696 642.240133,656.845695 549.504106,553.022099 C574.348317,402.317229 574.348317,424.841801 574.348317,402.317229 C574.348317,359.063818 539.124697,324 495.674159,324 C452.223621,324 417,359.063818 417,402.317229 C417,414.933625 417,402.317229 454.493152,558.647084 C360.814666,656.845695 490.941263,696 500.110123,696 Z" id="Oval" stroke="#FFFFFF" stroke-width="30"></path>
+            </g>
+        </g>
+    </g>
+</svg>
