@@ -1,5 +1,5 @@
-import Identity from 'Identity';
-import Transporter from 'Transporter';
+import Identity from '../Identity';
+import Transporter from '../Transporter';
 
 const createUser = async () => {
   const key = await Identity.create({
@@ -11,11 +11,11 @@ const createUser = async () => {
 
 const createUsers = (count: number) => {
   const tasks: Promise<Identity>[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     tasks.push(createUser());
   }
   return Promise.all(tasks);
-}
+};
 
 class TestTransporter implements Transporter {
   data: {[id: string]: string};

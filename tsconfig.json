@@ -2,11 +2,10 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
+    "moduleResolution": "node",
     "strict": true,
-    "baseUrl": "./src",
     "rootDir": "./src",
     "esModuleInterop": true,
-    "emitDeclarationOnly": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "build/babel",
     "sourceMap": true,

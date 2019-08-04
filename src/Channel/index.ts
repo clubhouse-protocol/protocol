@@ -1,42 +1,33 @@
-import openpgp, { message as PgpMessage, message } from 'openpgp';
-import Identity, { Message } from 'Identity';
-import Transporter from 'Transporter';
-import { randomString } from 'helpers/random';
 import EventEmitter from 'eventemitter3';
-import RuleSet from 'RuleSet';
-import rules from 'RuleSet/sets';
-
-export interface ChannelData<RuleType = any> {
-  self: Identity;
-  members: Identity[];
-  keys: {
-    idKey: string,
-    channelKey: string,
-  },
-  rules: RuleType,
-  ruleSet: string,
-}
+import openpgp, { message as PgpMessage } from 'openpgp';
+import Identity, { Message } from '../Identity';
+import Transporter from '../Transporter';
+import { randomString } from '../helpers/random';
+import RuleSet from '../RuleSet';
+import rules from '../RuleSet/sets';
+import ChannelData from './ChannelData';
+import { hash, hmac } from '../helpers/security';
+import Rule from './Rule';
+import Members from './Members';
 
 interface ChannelPack {
   keys: {
     idKey: string,
+    idKeySeed: string,
     channelKey: string,
   };
   members: string[];
-  rules: any,
-  ruleSet: string,
+  rules: {
+    type: string;
+    rules: any;
+  },
 }
 
-const rotateKey = (key: string) => key + 'a'; //TODO: hash
-
-const pack = (data: ChannelData): ChannelPack => {
-  return {
-    keys: data.keys,
-    members: data.members.map(m => m.publicKey.armor()),
-    rules: data.rules,
-    ruleSet: data.ruleSet,
-  };
-}
+const pack = (data: ChannelData): ChannelPack => ({
+  keys: data.keys,
+  members: data.members.pack(),
+  rules: data.rule.pack(),
+});
 
 class Channel extends EventEmitter {
   private _data: ChannelData;
@@ -54,9 +45,13 @@ class Channel extends EventEmitter {
     return this._data.members;
   }
 
+  get ruleType() {
+    return this._data.rule.type;
+  }
+
   async update(): Promise<(Error | Message<any>)[]> {
     const { self, members } = this._data;
-    const { idKey, channelKey } = this._data.keys;
+    const { idKey, idKeySeed, channelKey } = this._data.keys;
     const data = await this._transporter.get(idKey);
     if (!data) {
       return [];
@@ -66,19 +61,19 @@ class Channel extends EventEmitter {
       const options = {
         message: await PgpMessage.readArmored(data),
         passwords: [channelKey],
-      }
+      };
       const outer = await openpgp.decrypt(options);
-      const message = await self.decrypt(outer.data as string, members);
+      const message = await self.decrypt(outer.data as string, members.all);
       output = message;
-      const ruleSet = this._ruleEngines[this._data.ruleSet];
-      await ruleSet(message, this._data);
+      const ruleSet = this._ruleEngines[this._data.rule.type];
+      await ruleSet.validator(message, this._data.rule, this._data.members);
       this.emit('message', message);
     } catch (err) {
       output = err;
       this.emit('messageError', err);
     }
-    this._data.keys.idKey = rotateKey(idKey);
-    this._data.keys.channelKey = rotateKey(channelKey);
+    this._data.keys.idKey = hmac(idKey, idKeySeed);
+    this._data.keys.channelKey = hash(channelKey);
     const next = await this.update();
     return [
       output,
@@ -86,7 +81,7 @@ class Channel extends EventEmitter {
     ];
   }
 
-  async send(data: any, receivers: Identity[] = this._data.members) {
+  async send(data: any, receivers: Identity[] = this._data.members.all) {
     const { self } = this._data;
     const { idKey, channelKey } = this._data.keys;
     const inner = await self.encrypt(data, receivers);
@@ -96,43 +91,50 @@ class Channel extends EventEmitter {
     };
     const outer = await openpgp.encrypt(options);
     await this._transporter.add(idKey, outer.data);
-    return await this.update();
+    return this.update();
   }
 
   pack(receiver: Identity = this._data.self) {
     const packed = pack(this._data);
-    return this._data.self.encrypt(packed, [receiver])
+    return this._data.self.encrypt(packed, [receiver]);
   }
 
   static async create(self: Identity, members: string[] = []) {
     const channel = new Channel({
       keys: {
-        idKey: randomString(32),
-        channelKey: randomString(32),
+        idKey: randomString(),
+        idKeySeed: randomString(),
+        channelKey: randomString(),
       },
       self,
-      members: [
+      members: new Members([
         new Identity(self.publicKey),
         ...await Promise.all(members.map(key => Identity.open(key))),
-      ],
-      rules: {
-        dictator: self.fingerprint,
-      },
-      ruleSet: 'dictatorship',
+      ]),
+      rule: new Rule('dictatorship', {
+        dictators: [self.fingerprint],
+      }),
     }, undefined as any);
     const key = await channel.pack();
     return key;
   }
 
-  static async load(self: Identity, key: string, transporter: Transporter, sender: Identity = self) {
+  static async load(
+    self: Identity,
+    key: string,
+    transporter: Transporter,
+    sender: Identity = self,
+  ) {
     const channelDataRaw = await self.decrypt<ChannelPack>(key, [sender]);
     const channelData: ChannelData = {
       keys: channelDataRaw.data.keys,
-      rules: channelDataRaw.data.rules,
-      ruleSet: channelDataRaw.data.ruleSet,
-      members: await Promise.all(channelDataRaw.data.members.map(member => Identity.open(member))),
+      rule: new Rule(
+        channelDataRaw.data.rules.type,
+        channelDataRaw.data.rules.rules,
+      ),
+      members: await Members.create(channelDataRaw.data.members),
       self,
-    }
+    };
     const channel = new Channel(channelData, transporter);
     return channel;
   }

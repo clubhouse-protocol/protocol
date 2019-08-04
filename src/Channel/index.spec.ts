@@ -1,6 +1,6 @@
-import Channel from 'Channel';
-import Identity from 'Identity';
-import { createUsers, TestTransporter } from 'helpers/test';
+import Channel from './index';
+import Identity from '../Identity';
+import { createUsers, TestTransporter } from '../helpers/test';
 
 describe('Channel', () => {
   let users: Identity[];
@@ -73,7 +73,7 @@ describe('Channel', () => {
     await bobChannel.send('test1');
     await bobChannel.send('test2');
     await bobChannel.send('test3', [bob]);
-    
+
     const messages = await aliceChannel.update();
     const [msg1, msg2, msg3] = messages;
     expect(msg1 instanceof Error).toBeFalsy();
@@ -90,7 +90,7 @@ describe('Channel', () => {
 
     expect(msg3).toBeDefined();
     expect(msg3 instanceof Error).toBeTruthy();
-    
+
     if (msg2 instanceof Error) {
       expect(msg3.toString()).toBe('Error decrypting message: Session key decryption failed.');
     }

@@ -1,6 +1,16 @@
-import { ChannelData } from "Channel";
-import { Message } from "Identity";
+import { Message } from '../Identity';
+import Rule from '../Channel/Rule';
+import Members from '../Channel/Members';
 
-type RuleSet<RuleType = any> = (message: Message<any>, channel: ChannelData<RuleType>) => Promise<void>;
+type Validator<RuleType = any> =
+  (message: Message<any>, rule: Rule<RuleType>, members: Members) => Promise<void>;
 
-export default RuleSet
+interface RuleSet<RuleType = any> {
+  validator: Validator<RuleType>;
+}
+
+export {
+  Validator,
+};
+
+export default RuleSet;
