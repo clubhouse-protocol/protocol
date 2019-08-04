@@ -1,1 +1,3 @@
-export const randomString = () => 'random'; // TODO: Add random string
+import uuid from 'uuid/v4';
+
+export const randomString = () => uuid();

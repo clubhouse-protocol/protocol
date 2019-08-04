@@ -1,4 +1,4 @@
-import Channel from '.';
+import Channel from './index';
 import Identity from '../Identity';
 import { createUsers, TestTransporter } from '../helpers/test';
 
