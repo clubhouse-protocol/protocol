@@ -19,3 +19,4 @@ An OpenPGP based crypto group chat with decentralized rule managment
 ## Usage
 
 Documentation is still being written... but there is an [interactive tutorial](https://clubhouse-protocol.github.io/tutorial/)
+
