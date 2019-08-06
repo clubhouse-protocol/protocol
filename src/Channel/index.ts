@@ -82,6 +82,7 @@ class Channel extends EventEmitter {
   }
 
   async send(data: any, receivers: Identity[] = this._data.members.all) {
+    const preMessages = await this.update();
     const { self } = this._data;
     const { idKey, channelKey } = this._data.keys;
     const inner = await self.encrypt(data, receivers);
@@ -91,7 +92,11 @@ class Channel extends EventEmitter {
     };
     const outer = await openpgp.encrypt(options);
     await this._transporter.add(idKey, outer.data);
-    return this.update();
+    const postMessages = await this.update();
+    return [
+      ...preMessages,
+      ...postMessages,
+    ];
   }
 
   pack(receiver: Identity = this._data.self) {

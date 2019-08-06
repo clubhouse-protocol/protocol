@@ -1,5 +1,5 @@
 import RuleSet from '..';
-import dictatorship from './dictatorship';
+import dictatorship from './dictatorship/index';
 
 const rules: {[name: string]: RuleSet} = {
   dictatorship,
