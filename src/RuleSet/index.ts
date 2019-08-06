@@ -6,6 +6,7 @@ type Validator<RuleType = any> =
   (message: Message<any>, rule: Rule<RuleType>, members: Members) => Promise<void>;
 
 interface RuleSet<RuleType = any> {
+  name: string;
   validator: Validator<RuleType>;
 }
 
