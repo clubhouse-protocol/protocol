@@ -1,5 +1,7 @@
 import Identity from '../Identity';
+import Channel from '../Channel';
 import Transporter from '../Transporter';
+import { loadChannel } from '..';
 
 const createUser = async () => {
   const key = await Identity.create({
@@ -15,6 +17,21 @@ const createUsers = (count: number) => {
     tasks.push(createUser());
   }
   return Promise.all(tasks);
+};
+
+const createChannels = async (owner: Identity, members: Identity[], transporter: Transporter) => {
+  const ownerKey = await Channel.create(owner, members.map(m => m.publicKey.armor()));
+  const ownerChannel = await Channel.load(owner, ownerKey, transporter);
+  const memberChannels = await Promise.all(members.map(async (member) => {
+    const inivitation = await ownerChannel.pack(member);
+    const memberChannel = await loadChannel(member, inivitation, transporter, owner);
+    return memberChannel;
+  }));
+
+  return [
+    ownerChannel,
+    ...memberChannels,
+  ];
 };
 
 class TestTransporter implements Transporter {
@@ -37,4 +54,5 @@ export {
   createUser,
   createUsers,
   TestTransporter,
+  createChannels,
 };
