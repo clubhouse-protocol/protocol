@@ -1,6 +1,6 @@
 import Channel from './index';
 import Identity from '../Identity';
-import { createUsers, TestTransporter } from '../helpers/test';
+import { createUsers, TestTransporter, createChannels } from '../helpers/test';
 
 describe('Channel', () => {
   let users: Identity[];
@@ -65,10 +65,9 @@ describe('Channel', () => {
 
   it('should be able to share message', async () => {
     const [bob, alice] = users;
-    const bobChannelKey = await Channel.create(bob, [alice.publicKey.armor()]);
-    const bobChannel = await Channel.load(bob, bobChannelKey, transporter);
-    const aliceChannelKey = await bobChannel.pack(alice);
-    const aliceChannel = await Channel.load(alice, aliceChannelKey, transporter, bob);
+    const [bobChannel, aliceChannel] = await createChannels(bob, [
+      alice,
+    ], transporter);
 
     await bobChannel.send('test1');
     await bobChannel.send('test2');
