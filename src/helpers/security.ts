@@ -1,4 +1,4 @@
-const sha512 = require('js-sha512').sha512;
+const { sha512 } = require('js-sha512');
 
 export const hash = async (input: string) => sha512(input);
 
