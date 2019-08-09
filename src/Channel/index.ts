@@ -86,7 +86,7 @@ class Channel extends EventEmitter {
       output = err;
       this.emit('messageError', err);
     }
-    this._data.keys.idKey = hmac(idKey, idKeySeed);
+    this._data.keys.idKey = await hmac(idKey, idKeySeed);
     this._data.keys.channelKey = await hash(channelKey);
     const next = await this.update();
     return [

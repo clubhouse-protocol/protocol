@@ -69,12 +69,13 @@ describe('Channel', () => {
       alice,
     ], transporter);
 
-    await bobChannel.send('test1');
-    await bobChannel.send('test2');
+    await bobChannel.send('test1', undefined);
+    await bobChannel.send('test2', undefined);
     await bobChannel.send('test3', [bob]);
 
     const messages = await aliceChannel.update();
     const [msg1, msg2, msg3] = messages;
+    expect(msg1).toBeDefined();
     expect(msg1 instanceof Error).toBeFalsy();
     if (!(msg1 instanceof Error)) {
       expect(msg1.data).toEqual('test1');
@@ -90,8 +91,8 @@ describe('Channel', () => {
     expect(msg3).toBeDefined();
     expect(msg3 instanceof Error).toBeTruthy();
 
-    if (msg2 instanceof Error) {
-      expect(msg3.toString()).toBe('Error decrypting message: Session key decryption failed.');
+    if (msg3 instanceof Error) {
+      expect(msg3.toString()).toBe('Error: Error decrypting message: Session key decryption failed.');
     }
   });
 });
