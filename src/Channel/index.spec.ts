@@ -1,6 +1,11 @@
 import Channel from './index';
 import Identity from '../Identity';
-import { createUsers, TestTransporter, createChannels } from '../helpers/test';
+import {
+  createUsers,
+  TestTransporter,
+  createChannels,
+  sleep,
+} from '../helpers/test';
 
 describe('Channel', () => {
   let users: Identity[];
@@ -25,6 +30,10 @@ describe('Channel', () => {
     const channelKey = await Channel.create(bob);
     const channel = await Channel.load(bob, channelKey, transporter);
     expect(channel).toBeDefined();
+    expect(channel.ruleType).toBe('dictatorship');
+    expect(channel.members.all.map(m => m.fingerprint)).toEqual([
+      bob.fingerprint,
+    ]);
   });
 
   it('should be able update without messages', async () => {
@@ -94,5 +103,21 @@ describe('Channel', () => {
     if (msg3 instanceof Error) {
       expect(msg3.toString()).toBe('Error: Error decrypting message: Session key decryption failed.');
     }
+  });
+
+  it('should be able to listen for signals', async () => {
+    const [bob, alice] = users;
+    let called = false;
+    const [bobChannel] = await createChannels(bob, [
+      alice,
+    ], transporter);
+    await bobChannel.startAutoUpdate(async () => {
+      called = true;
+    });
+    await sleep(10);
+    expect(transporter.signalIds.length).toBe(1);
+    await transporter.sendSignal(transporter.signalIds[0]);
+    await sleep(10);
+    expect(called).toBeTruthy();
   });
 });

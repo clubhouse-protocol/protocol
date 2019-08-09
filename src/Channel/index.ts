@@ -49,13 +49,16 @@ class Channel extends EventEmitter {
     return this._data.rule.type;
   }
 
-  startAutoUpdate() {
+  startAutoUpdate(afterUpdate?: () => Promise<any>) {
     Promise.resolve().then(async () => {
       if (this._transporter.waitForSignal) {
         const id = await hash(this._data.keys.idKey);
         await this._transporter.waitForSignal(id);
         await this.update();
-        this.startAutoUpdate();
+        if (afterUpdate) {
+          await afterUpdate();
+        }
+        this.startAutoUpdate(afterUpdate);
       }
     });
   }

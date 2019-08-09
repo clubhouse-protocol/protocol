@@ -36,9 +36,15 @@ const createChannels = async (owner: Identity, members: Identity[], transporter:
 
 class TestTransporter implements Transporter {
   data: {[id: string]: string};
+  signals: {[ signal: string]: () => void}
 
   constructor() {
     this.data = {};
+    this.signals = {};
+  }
+
+  get signalIds(): string[] {
+    return Object.keys(this.signals);
   }
 
   async get(id: string) {
@@ -48,11 +54,31 @@ class TestTransporter implements Transporter {
   async add(id: string, value: string) {
     this.data[id] = value;
   }
+
+  waitForSignal(signal: string) {
+    let resolver: () => void = () => {};
+    const promise = new Promise<any>((resolve) => {
+      resolver = resolve;
+    });
+    this.signals[signal] = resolver;
+    return promise;
+  }
+
+  sendSignal(signal: string) {
+    this.signals[signal]();
+  }
 }
+
+const sleep = (ms: number) => new Promise((resolve) => {
+  setTimeout(() => {
+    resolve();
+  }, ms);
+});
 
 export {
   createUser,
   createUsers,
   TestTransporter,
   createChannels,
+  sleep,
 };
