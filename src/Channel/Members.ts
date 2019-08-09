@@ -1,20 +1,24 @@
+import EventEmitter from 'eventemitter3';
 import Identity from '../Identity';
 
-class Members {
+class Members extends EventEmitter {
   private _members: Identity[];
 
   constructor(members: Identity[]) {
+    super();
     this._members = members;
   }
 
   async add(key: string) {
     const member = await Identity.open(key);
     this._members.push(member);
+    this.emit('update');
   }
 
   async remove(key: string) {
     const member = await Identity.open(key);
     this._members = this._members.filter(m => m.fingerprint !== member.fingerprint);
+    this.emit('update');
   }
 
   get all() {
