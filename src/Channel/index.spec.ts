@@ -6,6 +6,7 @@ import {
   createChannels,
   sleep,
 } from '../helpers/test';
+import { DecryptionError } from '../errors';
 
 describe('Channel', () => {
   let users: Identity[];
@@ -100,8 +101,8 @@ describe('Channel', () => {
     expect(msg3).toBeDefined();
     expect(msg3 instanceof Error).toBeTruthy();
 
-    if (msg3 instanceof Error) {
-      expect(msg3.toString()).toBe('Error: Error decrypting message: Session key decryption failed.');
+    if (msg3 instanceof DecryptionError) {
+      expect(msg3 instanceof DecryptionError).toBeTruthy();
     }
   });
 

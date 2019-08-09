@@ -1,4 +1,5 @@
 import { Validator } from '../..';
+import { DisallowedError } from '../../../errors';
 
 interface RuleOptions {
   dictators: string[];
@@ -9,7 +10,7 @@ const dictatorship: Validator<RuleOptions> = async (message, rule, members) => {
   const { data, sender } = message;
   const requireDictator = () => {
     if (!rule.rules.dictators.includes(sender.fingerprint)) {
-      throw new Error('Non-dictator tried to add a user');
+      throw new DisallowedError('Non-dictator tried to add a user');
     }
   };
   switch (data.type) {
