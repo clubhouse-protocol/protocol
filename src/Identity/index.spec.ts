@@ -1,4 +1,5 @@
 import Identity from './index';
+import { DecryptionError } from '../errors';
 
 const getUser = async (name: string, passphrase?: string, unlock?: boolean) => {
   const privateKey = await Identity.create({
@@ -84,12 +85,21 @@ describe('Identity', () => {
     const bob = await getBob();
     const alice = await getAlice();
     const encrypted = await bob.encrypt('hello', [alice]);
-    let errorMessage: string = '';
+    let error: Error = undefined as any;
     try {
       await alice.decrypt(encrypted, [alice]);
     } catch (err) {
-      errorMessage = err.message;
+      error = err;
     }
-    expect(errorMessage).toBe('Sender not known');
+
+    expect(error instanceof DecryptionError).toBeTruthy();
+    if (error instanceof DecryptionError) {
+      expect(error.message).toBe('Sender not known');
+      expect(error.baseError).toBeDefined();
+      if (error.baseError) {
+        expect(error.baseError.message).toBe('Sender not known');
+      }
+      expect(error.type).toBe('DECRYPTION_ERROR');
+    }
   });
 });

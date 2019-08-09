@@ -4,6 +4,7 @@ import openpgp, {
   KeyOptions, EncryptOptions,
   DecryptOptions,
 } from 'openpgp';
+import { DecryptionError, BaseError } from '../errors';
 
 interface CreateOptions {
   name: string;
@@ -60,25 +61,26 @@ class Identity {
   }
 
   async decrypt<Type = unknown>(armored: string, senders: Identity[]): Promise<Message<Type>> {
-    const options: DecryptOptions = {
-      message: await PgpMessage.readArmored(armored),
-      publicKeys: senders.map(r => r.publicKey),
-      privateKeys: [this._key],
-    };
-    const result = await openpgp.decrypt(options);
-    const [signature] = result.signatures;
-    if (!signature.valid) {
-      throw new Error('Sender not known');
+    try {
+      const options: DecryptOptions = {
+        message: await PgpMessage.readArmored(armored),
+        publicKeys: senders.map(r => r.publicKey),
+        privateKeys: [this._key],
+      };
+      const result = await openpgp.decrypt(options);
+      const [signature] = result.signatures;
+      if (!signature.valid) { throw new Error('Sender not known'); }
+      const data = JSON.parse(result.data as string) as Type;
+      const sender = senders.find(s => s.hasId(signature.keyid));
+      if (!sender) { throw new Error('Sender identity not found'); }
+      return {
+        sender,
+        data,
+      };
+    } catch (err) {
+      if (err instanceof BaseError) { throw err; }
+      throw new DecryptionError(err);
     }
-    const data = JSON.parse(result.data as string) as Type;
-    const sender = senders.find(s => s.hasId(signature.keyid));
-    if (!sender) {
-      throw new Error('Sender identity not found');
-    }
-    return {
-      sender,
-      data,
-    };
   }
 
   public static async create({
