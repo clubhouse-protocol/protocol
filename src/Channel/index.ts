@@ -52,12 +52,12 @@ class Channel extends EventEmitter {
   startAutoUpdate() {
     Promise.resolve().then(async () => {
       if (this._transporter.waitForSignal) {
-        const id = await hash(this._data.keys.idKey)
-        await this._transporter.waitForSignal(id)
-        const msg = await this.update();
+        const id = await hash(this._data.keys.idKey);
+        await this._transporter.waitForSignal(id);
+        await this.update();
         this.startAutoUpdate();
       }
-    })
+    });
   }
 
   async update(): Promise<(Error | Message<any> & { id: string })[]> {
