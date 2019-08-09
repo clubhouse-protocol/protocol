@@ -69,22 +69,16 @@ class Identity {
       };
       const result = await openpgp.decrypt(options);
       const [signature] = result.signatures;
-      if (!signature.valid) {
-        throw new Error('Sender not known');
-      }
+      if (!signature.valid) { throw new Error('Sender not known'); }
       const data = JSON.parse(result.data as string) as Type;
       const sender = senders.find(s => s.hasId(signature.keyid));
-      if (!sender) {
-        throw new Error('Sender identity not found');
-      }
+      if (!sender) { throw new Error('Sender identity not found'); }
       return {
         sender,
         data,
       };
     } catch (err) {
-      if (err instanceof BaseError) {
-        throw err;
-      }
+      if (err instanceof BaseError) { throw err; }
       throw new DecryptionError(err);
     }
   }
