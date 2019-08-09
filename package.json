@@ -63,6 +63,7 @@
   "dependencies": {
     "eventemitter3": "^4.0.0",
     "openpgp": "^4.5.5",
+    "sha512": "0.0.1",
     "uuid": "^3.3.2"
   }
 }

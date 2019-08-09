@@ -1,3 +1,5 @@
-export const hash = (input: string) => `${input}a`; // TODO: update to hash algoritm
+const sha512 = require('sha512');
 
-export const hmac = (input: string, secret: string) => `${input}${secret}a`; // TODO: update to hmac algoritm
+export const hash = async (input: string) => sha512(input).toString('hex');
+
+export const hmac = (input: string, secret: string) => sha512.hmac(secret).finalize(input).toString('hex');
