@@ -49,7 +49,21 @@ class Channel extends EventEmitter {
     return this._data.rule.type;
   }
 
-  async update(): Promise<(Error | Message<any>)[]> {
+  startAutoUpdate(afterUpdate?: () => Promise<any>) {
+    Promise.resolve().then(async () => {
+      if (this._transporter.waitForSignal) {
+        const id = await hash(this._data.keys.idKey);
+        await this._transporter.waitForSignal(id);
+        await this.update();
+        if (afterUpdate) {
+          await afterUpdate();
+        }
+        this.startAutoUpdate(afterUpdate);
+      }
+    });
+  }
+
+  async update(): Promise<(Error | Message<any> & { id: string })[]> {
     const { self, members } = this._data;
     const { idKey, idKeySeed, channelKey } = this._data.keys;
     const data = await this._transporter.get(idKey);
@@ -64,16 +78,19 @@ class Channel extends EventEmitter {
       };
       const outer = await openpgp.decrypt(options);
       const message = await self.decrypt(outer.data as string, members.all);
-      output = message;
+      output = {
+        ...message,
+        id: idKey,
+      };
       const ruleSet = this._ruleEngines[this._data.rule.type];
       await ruleSet.validator(message, this._data.rule, this._data.members);
-      this.emit('message', message);
+      this.emit('message', output);
     } catch (err) {
       output = err;
       this.emit('messageError', err);
     }
-    this._data.keys.idKey = hmac(idKey, idKeySeed);
-    this._data.keys.channelKey = hash(channelKey);
+    this._data.keys.idKey = await hmac(idKey, idKeySeed);
+    this._data.keys.channelKey = await hash(channelKey);
     const next = await this.update();
     return [
       output,
