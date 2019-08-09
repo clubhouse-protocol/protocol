@@ -78,8 +78,8 @@ describe('Channel', () => {
       alice,
     ], transporter);
 
-    await bobChannel.send('test1', undefined);
-    await bobChannel.send('test2', undefined);
+    await bobChannel.send('test1');
+    await bobChannel.send('test2');
     await bobChannel.send('test3', [bob]);
 
     const messages = await aliceChannel.update();
