@@ -39,6 +39,10 @@ class Channel extends EventEmitter {
     this._data = data;
     this._transporter = transporter;
     this._ruleEngines = rules;
+
+    this.setUpdated = this.setUpdated.bind(this);
+    this._data.rule.on('update', this.setUpdated);
+    this._data.rule.on('update', this.setUpdated);
   }
 
   get members() {
@@ -47,6 +51,10 @@ class Channel extends EventEmitter {
 
   get ruleType() {
     return this._data.rule.type;
+  }
+
+  private setUpdated() {
+    this.emit('updatePack');
   }
 
   startAutoUpdate(afterUpdate?: () => Promise<any>) {
