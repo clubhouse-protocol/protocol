@@ -1,5 +1,6 @@
-import EventEmitter from 'eventemitter3';
 import Identity from '../Identity';
+import EventEmitter, { Listener } from '../EventEmitter';
+import { InvalidError } from '../errors';
 
 class Members extends EventEmitter {
   private _members: Identity[];
@@ -11,14 +12,17 @@ class Members extends EventEmitter {
 
   async add(key: string) {
     const member = await Identity.open(key);
+    if (!member.validKey) {
+      throw new InvalidError('Member key not valid');
+    }
     this._members.push(member);
-    this.emit('update');
+    await this.emit('updated', this._members);
   }
 
   async remove(key: string) {
     const member = await Identity.open(key);
     this._members = this._members.filter(m => m.fingerprint !== member.fingerprint);
-    this.emit('update');
+    await this.emit('updated', this._members);
   }
 
   get all() {
@@ -37,6 +41,10 @@ class Members extends EventEmitter {
     const members = await Promise.all(keys.map(member => Identity.open(member)));
     return new Members(members);
   }
+}
+
+declare interface Members {
+  on: (type: 'updated', listener: Listener<[Identity[]]>) => void;
 }
 
 export default Members;

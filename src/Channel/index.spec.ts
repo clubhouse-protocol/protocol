@@ -1,3 +1,4 @@
+import { spy } from 'sinon';
 import Channel from './index';
 import Identity from '../Identity';
 import {
@@ -71,6 +72,30 @@ describe('Channel', () => {
     }
     const [err] = await channel.send('test2', [alice]);
     expect(err instanceof Error).toBe(true);
+  });
+
+  it('should not dispatch update event if no messages', async () => {
+    const [bob] = users;
+    const [bobChannel] = await createChannels(bob, [], transporter);
+    const callback = spy();
+    bobChannel.on('updated', callback);
+    await bobChannel.update();
+    expect(callback.called).toBeFalsy();
+  });
+
+  it('should dispatch update event if new messages', async () => {
+    const [bob] = users;
+    const [bobChannel] = await createChannels(bob, [], transporter);
+    const callback = spy();
+    bobChannel.on('updated', callback);
+    await bobChannel.send('test');
+    expect(callback.called).toBeTruthy();
+    expect(callback.firstCall.args.length).toBe(2);
+    const [messages, responseChannel] = callback.firstCall.args;
+    expect(responseChannel).toBe(bobChannel);
+    expect(messages.length).toBe(1);
+    expect(messages[0].sender.fingerprint).toBe(bob.fingerprint);
+    expect(messages[0].data).toBe('test');
   });
 
   it('should be able to share message', async () => {

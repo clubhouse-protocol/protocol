@@ -24,6 +24,10 @@ class Identity {
     this._key = key;
   }
 
+  get validKey() {
+    return !!this._key
+  }
+
   get fingerprint() {
     return this._key.getFingerprint();
   }

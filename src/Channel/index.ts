@@ -1,4 +1,3 @@
-import EventEmitter from 'eventemitter3';
 import openpgp, { message as PgpMessage } from 'openpgp';
 import Identity, { Message } from '../Identity';
 import Transporter from '../Transporter';
@@ -8,7 +7,9 @@ import rules from '../RuleSet/sets';
 import ChannelData from './ChannelData';
 import { hash, hmac } from '../helpers/security';
 import Rule from './Rule';
-import Members from './Members';
+import Members, {} from './Members';
+import EventEmitter, { Listener } from '../EventEmitter';
+
 
 interface ChannelPack {
   keys: {
@@ -22,6 +23,8 @@ interface ChannelPack {
     rules: any;
   },
 }
+
+type DataMessage = Error | Message<any> & { id: string };
 
 const pack = (data: ChannelData): ChannelPack => ({
   keys: data.keys,
@@ -39,10 +42,8 @@ class Channel extends EventEmitter {
     this._data = data;
     this._transporter = transporter;
     this._ruleEngines = rules;
-
-    this.setUpdated = this.setUpdated.bind(this);
-    this._data.rule.on('update', this.setUpdated);
-    this._data.rule.on('update', this.setUpdated);
+    this._data.rule.on('updated', (type, newRules) => this.emit('ruleUpdated', type, newRules));
+    this._data.members.on('updated', members => this.emit('membersUpdated', members));
   }
 
   get members() {
@@ -51,10 +52,6 @@ class Channel extends EventEmitter {
 
   get ruleType() {
     return this._data.rule.type;
-  }
-
-  private setUpdated() {
-    this.emit('updatePack');
   }
 
   startAutoUpdate(afterUpdate?: () => Promise<any>) {
@@ -71,7 +68,7 @@ class Channel extends EventEmitter {
     });
   }
 
-  async update(): Promise<(Error | Message<any> & { id: string })[]> {
+  private async _update(): Promise<(Error | Message<any> & { id: string })[]> {
     const { self, members } = this._data;
     const { idKey, idKeySeed, channelKey } = this._data.keys;
     const data = await this._transporter.get(idKey);
@@ -92,10 +89,9 @@ class Channel extends EventEmitter {
       };
       const ruleSet = this._ruleEngines[this._data.rule.type];
       await ruleSet.validator(message, this._data.rule, this._data.members);
-      this.emit('message', output);
     } catch (err) {
       output = err;
-      this.emit('messageError', err);
+      err.id = idKey;
     }
     this._data.keys.idKey = await hmac(idKey, idKeySeed);
     this._data.keys.channelKey = await hash(channelKey);
@@ -104,6 +100,14 @@ class Channel extends EventEmitter {
       output,
       ...next,
     ];
+  }
+
+  async update(): Promise<(Error | Message<any> & { id: string })[]> {
+    const response = await this._update();
+    if (response.length > 0) {
+      await this.emit('updated', response, this);
+    }
+    return response;
   }
 
   async send(data: any, receivers: Identity[] = this._data.members.all) {
@@ -168,6 +172,10 @@ class Channel extends EventEmitter {
     const channel = new Channel(channelData, transporter);
     return channel;
   }
+}
+
+declare interface Channel {
+  on: (type: 'updated', listener: Listener<[DataMessage[], Channel]>) => void;
 }
 
 export default Channel;

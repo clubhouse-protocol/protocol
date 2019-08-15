@@ -1,5 +1,6 @@
 import Identity from '../../../Identity';
 import { createUsers, TestTransporter, createChannels } from '../../../helpers/test';
+import { InvalidError } from '../../../errors';
 
 describe('rules', () => {
   describe('dictatorship', () => {
@@ -24,6 +25,18 @@ describe('rules', () => {
       });
       expect(msg instanceof Error).toBeFalsy();
       expect(bobChannel.members.length).toBe(2);
+    });
+
+    it('bob should be able to add invalid key', async () => {
+      const [bob] = users;
+      const [bobChannel] = await createChannels(bob, [], transporter);
+      expect(bobChannel.members.length).toBe(1);
+      const [msg] = await bobChannel.send({
+        type: 'ADD_MEMBER',
+        key: 'foobar',
+      });
+      expect(msg instanceof InvalidError).toBeTruthy();
+      expect(bobChannel.members.length).toBe(1);
     });
 
     it('bob should be able to remove members', async () => {

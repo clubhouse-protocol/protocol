@@ -5,3 +5,5 @@
 /src
 /babel.config.js
 /package-lock.json
+/docs
+/spec

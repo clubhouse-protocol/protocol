@@ -1,4 +1,4 @@
-import EventEmitter from 'eventemitter3';
+import EventEmitter, { Listener } from '../EventEmitter';
 
 class Rule<RuleType = any> extends EventEmitter {
   private _rules: RuleType;
@@ -12,7 +12,7 @@ class Rule<RuleType = any> extends EventEmitter {
 
   set rules(rules: RuleType) {
     this._rules = rules;
-    this.emit('update');
+    this.emit('update', this.type, this.rules);
   }
 
   get rules() {
@@ -27,7 +27,7 @@ class Rule<RuleType = any> extends EventEmitter {
   changeType<RuleType = any>(type: string, rules: RuleType) {
     this._type = type;
     this._rules = rules as any;
-    this.emit('update');
+    this.emit('update', this.type, this.rules);
   }
 
   pack() {
@@ -36,6 +36,10 @@ class Rule<RuleType = any> extends EventEmitter {
       rules: this.rules,
     };
   }
+}
+
+declare interface Rule<RuleType = any> {
+  on: (type: 'updated', listener: Listener<[string, RuleType]>) => void;
 }
 
 export default Rule;

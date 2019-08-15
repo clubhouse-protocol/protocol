@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.1",
+  "version": "1.0.1-alpha.1",
   "description": "",
   "maintainers": [
     {
@@ -36,9 +36,9 @@
     "@babel/register": "7.5.5",
     "@babel/runtime": "7.5.5",
     "@istanbuljs/nyc-config-typescript": "0.1.3",
-    "@types/eventemitter3": "2.0.2",
     "@types/jasmine": "3.4.0",
     "@types/openpgp": "4.4.6",
+    "@types/sinon": "^7.0.13",
     "@types/uuid": "3.4.5",
     "@types/webpack": "4.32.1",
     "@typescript-eslint/eslint-plugin": "1.13.0",
@@ -56,12 +56,12 @@
     "eslint-plugin-react": "7.14.3",
     "jasmine": "3.4.0",
     "nyc": "14.1.1",
+    "sinon": "^7.4.1",
     "typescript": "3.5.3",
     "webpack": "4.39.2",
     "webpack-cli": "3.3.6"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.0",
     "js-sha512": "^0.8.0",
     "openpgp": "^4.5.5",
     "uuid": "^3.3.2"
