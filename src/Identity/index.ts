@@ -25,7 +25,7 @@ class Identity {
   }
 
   get validKey() {
-    return !!this._key
+    return !!this._key;
   }
 
   get fingerprint() {
