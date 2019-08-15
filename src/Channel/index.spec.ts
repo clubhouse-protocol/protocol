@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { spy } from 'sinon'; // eslint-disable-line import/no-extraneous-dependencies
 import Channel from './index';
 import Identity from '../Identity';
 import {
