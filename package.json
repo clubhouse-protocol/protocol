@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "maintainers": [
     {
@@ -58,7 +58,7 @@
     "nyc": "14.1.1",
     "typescript": "3.5.3",
     "webpack": "4.39.2",
-    "webpack-cli": "3.3.6"
+    "webpack-cli": "3.3.7"
   },
   "dependencies": {
     "eventemitter3": "^4.0.0",
