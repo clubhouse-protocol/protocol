@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "description": "",
   "maintainers": [
     {
@@ -37,7 +37,7 @@
     "@babel/runtime": "7.6.3",
     "@istanbuljs/nyc-config-typescript": "0.1.3",
     "@types/eventemitter3": "2.0.2",
-    "@types/jasmine": "3.4.2",
+    "@types/jasmine": "3.4.3",
     "@types/openpgp": "4.4.7",
     "@types/uuid": "3.4.5",
     "@types/webpack": "4.39.3",
