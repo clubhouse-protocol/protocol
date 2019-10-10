@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "",
   "maintainers": [
     {
@@ -28,8 +28,8 @@
   "author": "Morten Olsen",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.6.3",
-    "@babel/core": "7.6.3",
+    "@babel/cli": "7.6.4",
+    "@babel/core": "7.6.4",
     "@babel/plugin-transform-runtime": "7.6.2",
     "@babel/preset-env": "7.6.3",
     "@babel/preset-typescript": "7.6.0",
