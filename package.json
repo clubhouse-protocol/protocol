@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.70",
+  "version": "1.0.71",
   "description": "",
   "maintainers": [
     {
@@ -28,13 +28,13 @@
   "author": "Morten Olsen",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.7.0",
-    "@babel/core": "7.7.2",
-    "@babel/plugin-transform-runtime": "7.6.2",
-    "@babel/preset-env": "7.7.1",
-    "@babel/preset-typescript": "7.7.2",
-    "@babel/register": "7.7.0",
-    "@babel/runtime": "7.7.2",
+    "@babel/cli": "7.7.4",
+    "@babel/core": "7.7.4",
+    "@babel/plugin-transform-runtime": "7.7.4",
+    "@babel/preset-env": "7.7.4",
+    "@babel/preset-typescript": "7.7.4",
+    "@babel/register": "7.7.4",
+    "@babel/runtime": "7.7.4",
     "@istanbuljs/nyc-config-typescript": "0.1.3",
     "@types/eventemitter3": "2.0.2",
     "@types/jasmine": "3.5.0",
