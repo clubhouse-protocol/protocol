@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.80",
+  "version": "1.0.81",
   "description": "",
   "maintainers": [
     {
@@ -57,7 +57,7 @@
     "jasmine": "3.5.0",
     "nyc": "14.1.1",
     "typescript": "3.7.3",
-    "webpack": "4.41.2",
+    "webpack": "4.41.3",
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
