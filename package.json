@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.122",
+  "version": "1.0.123",
   "description": "",
   "maintainers": [
     {
@@ -56,7 +56,7 @@
     "eslint-plugin-react": "7.18.3",
     "jasmine": "3.5.0",
     "nyc": "14.1.1",
-    "typescript": "3.7.5",
+    "typescript": "3.8.2",
     "webpack": "4.41.6",
     "webpack-cli": "3.3.11"
   },
