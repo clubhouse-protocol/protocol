@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.125",
+  "version": "1.0.126",
   "description": "",
   "maintainers": [
     {
@@ -48,7 +48,7 @@
     "babel-plugin-module-resolver": "3.2.0",
     "cross-env": "5.2.1",
     "eslint": "6.8.0",
-    "eslint-config-airbnb": "17.1.1",
+    "eslint-config-airbnb": "18.2.1",
     "eslint-import-resolver-babel-module": "5.1.2",
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jasmine": "2.10.1",
