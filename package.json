@@ -1,6 +1,6 @@
 {
   "name": "clubhouse-protocol",
-  "version": "1.0.125",
+  "version": "1.0.126",
   "description": "",
   "maintainers": [
     {
@@ -39,7 +39,7 @@
     "@types/eventemitter3": "2.0.2",
     "@types/jasmine": "3.5.7",
     "@types/openpgp": "4.4.8",
-    "@types/uuid": "3.4.7",
+    "@types/uuid": "8.3.4",
     "@types/webpack": "4.41.6",
     "@typescript-eslint/eslint-plugin": "2.21.0",
     "@typescript-eslint/parser": "2.21.0",
@@ -64,6 +64,6 @@
     "eventemitter3": "^4.0.0",
     "js-sha512": "^0.8.0",
     "openpgp": "^4.5.5",
-    "uuid": "^3.3.2"
+    "uuid": "^8.0.0"
   }
 }
